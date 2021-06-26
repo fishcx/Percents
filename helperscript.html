@@ -1,0 +1,102 @@
+<script>
+    // round
+    function round(num){
+        return Math.round(num);
+    }
+    
+    // removes all double signs
+    function doublesigns(string){
+       return string.replaceAll("-+", "-").replaceAll("- +", "-").replaceAll("+ -", "-").replaceAll("- -", "+").replaceAll("+-", "-").replaceAll("-- ", "+");
+    }
+    
+    // function to replace all occurences of a string
+    String.prototype.replaceAll = function(searchStr, replaceStr) {
+	   var str = this;
+       // no match exists in string?
+       if(str.indexOf(searchStr) === -1) {
+          // return string
+          return str;
+       }
+      // replace and remove first match, and do another recursirve search/replace
+       return (str.replace(searchStr, replaceStr)).replaceAll(searchStr, replaceStr);
+    }
+    
+    // random integer between and including min and max
+	function random(min, max, rational) {
+         var random;
+         if ( rational ) {
+            random = randomDec( min, max, 1 );
+        } else {
+            random = Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+        }
+        return random;
+    } 
+    
+    // random non-zero integer bewteen min and max
+    function non_zero_random(min, max, rational) {
+         var output;
+          
+         if ( rational ) {
+            do{output = randomDec( min, max, 1 );} while (output ==0);
+         } else {
+            do{output = Math.floor(Math.random() * (max - min + 1) ) + min;} while (output === 0); 
+         }
+         
+         return output;
+    } 
+    
+    function randomDec(min, max, decimalPlaces) {  
+        var rand = Math.random()*(max-min) + min;
+        var power = Math.pow(10, decimalPlaces);
+        return Math.floor(rand*power) / power;
+    }
+    
+    // GCD of two values
+    function gcd(x, y) {
+      if ((typeof x !== 'number') || (typeof y !== 'number')) 
+        return false;
+        
+        x = Math.abs(x);
+        y = Math.abs(y);
+       while(y) {
+          var t = y;
+          y = x % y;
+          x = t;
+        }
+       return x;
+  } 
+
+   // use this for compplicated calculations to format the decimal correctly for floating point errors
+   function formatDec(a){
+   
+     return Math.round(a*10000)/10000;
+   
+   }
+
+// simplify fraction
+    function simplifyFrac(num, denom){
+     
+     // format the negative better so that it isn't in a fraction
+     var neg = "";
+     if((num/denom) < 0){
+        
+        num = Math.abs(num);
+        denom = Math.abs(denom);
+        neg = "-";
+        
+     }
+       // if integer, return integer
+       if((num % denom) === 0){
+       
+         return neg+num/denom;
+         
+       }
+       // otherwise, return fraction in simplest form
+       else{
+            var g = gcd(num,denom);
+            return neg+"\\frac{"+(num/g)+"}{"+(denom/g)+"}";
+        }
+      
+    }
+
+</script>

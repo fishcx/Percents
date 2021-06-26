@@ -1,0 +1,547 @@
+<script>
+	$(document).ready(function() {
+    
+    $('.changeItem').change(function(){
+        $('#generate').click();
+    });
+
+    $(document).keypress(function (e) {
+        var key = e.which;
+         if(key == 13)  // the enter key code
+         {
+            $('#generate').click();
+             return false;  
+          }
+    });
+    
+    $('#video-button').hide();
+    
+    var testing = false;
+    $('#generate').click(function(){
+        if(!testing){$("#answer").hide(); $("#show-answer").val("Show Answer");}
+        
+        // default option is integers
+        var rat = false;
+        
+        // otherwise use decimals
+        if($("#dec-toggle").is(':checked')){   rat = true; }
+        
+        var type;
+        // handles the formatting for selecting any type
+        if($("#type").val()=="any"){type = random(1,7);}
+        else{type = parseInt($("#type").val())}
+
+        generate(type,rat);       
+     });
+
+
+    $("#show-answer").click(function(){
+       if($("#answer").is(":hidden") ){
+          $("#answer").show();
+          $("#show-answer").val("Hide Answer");
+       } else{
+         $("#answer").hide();
+         $("#show-answer").val("Show Answer");
+        }
+    });
+    
+    if(testing){ $("#answer").show();}
+   
+    
+	});
+	function generate(type,rat){     
+       
+       var problem = "";
+       var answer = "";
+       var a,b,c,d,e,f,g,h;
+       $("#generated").html("");
+       $("#answer").html("");
+  
+       switch(type) {
+           // Percent of a Number (with word problems)
+           case 1: 
+          
+           switch(random(0,2)){
+           
+               // case 0: Simple - find x % of a number
+               case 0:
+               
+                  a = random(3,200,rat); // percent
+                  b = random(10, 300);    // number
+                  c = formatDec(a*b/100); // answer
+                  
+                  problem = "Find \\("+a+"\\%\\) of \\("+b+"\\)";
+                  answer = "\\("+c+"\\)";
+               
+               break;
+               
+               // case 1: Tax word problem - find total cost
+               case 1:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(2);          // price 
+                  d = random(4,10,rat);            // tax
+                  e = formatDec((1+d/100)*c);      // new cost
+                  e = formatDec(round(e*100)/100).toFixed(2); // round to nearest cent
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) before tax. If a \\("+d+"\\%\\) tax is applied, what is the final cost?";
+                  problem += "<br><br>Round to the nearest cent.";
+                  answer = "$\\("+e+"\\)";
+
+               break;
+               
+               // case 2: Discount word problem - find total cost
+               case 2:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(2);          // price 
+                  d = random(5,40,rat);            // discount
+                  e = formatDec((1-d/100)*c);      // new cost
+                  e = formatDec(round(e*100)/100).toFixed(2); // round to nearest cent
+                  
+                  problem = "A "+b+" originally costs $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied, what is the new price?";
+                  problem += "<br><br>Round to the nearest cent.";
+                  answer = "$\\("+e+"\\)";
+
+               break;
+           
+           }
+          
+           break;
+           
+           // Determining Percents (with word problems)
+           case 2: 
+                 
+           switch(random(0,2)){
+           
+               // case 0: Using part/whole to find percent
+               case 0:
+               
+                  a = random(1,99,rat);   // percent
+                  b = random(10, 300);    // whole
+                  c = formatDec(a*b/100); // part
+                  
+                  problem = "If the part is \\("+c+"\\) and the whole is \\("+b+"\\), what is the percent?";
+                  answer = "\\("+a+"\\%\\)";
+               
+               break;
+               
+               // case 1: What percent of number1 is number2?
+               case 1:
+               
+                  a = random(3,200,rat);  // percent
+                  b = random(10, 300);    // whole
+                  c = formatDec(a*b/100); // part
+                  
+                  problem = "What percent of \\("+b+"\\) is \\("+c+"\\)?";
+                  answer = "\\("+a+"\\%\\)";
+               
+               break;
+               
+               // case 2: Word Problem - What percent of x is y?
+               case 2:
+                  
+                  a = surveySubject();                 // selected
+                  b = formatDec(random(10,4000)*100);  // total, want a multiple of 100 to avoid decimals since % has no decimal places
+                  c = random(2, 85,rat);               // percent
+                  d = formatDec(c/100*b);              // num selected
+                  
+                  problem = "In a survey of \\("+b+"\\) middle school students, \\("+d+"\\) chose "+a+" as their favorite hobby.  What percent of those surveyed chose "+a+"?";
+                  answer = "\\("+c+"\\%\\)";
+               
+               break;
+           
+           }
+           
+           break;
+           
+           // Determining the Total/Original
+           case 3:
+           
+           switch(random(0,3)){
+           
+               // case 0: % of what number is part - find total
+               case 0:
+               
+                  a = random(3,200,rat);  // percent
+                  b = random(10, 300);    // number
+                  c = formatDec(a*b/100); // answer
+                  
+                  problem = "\\("+a+"\\%\\) of what number is \\("+c+"\\)?";
+                  answer = "\\("+b+"\\)";
+               
+               break;
+               
+               // case 1: Number is % of x, what is x?
+               case 1:
+               
+                  a = random(3,200,rat);  // percent
+                  b = random(10, 300);    // number
+                  c = formatDec(a*b/100); // answer
+                  
+                  problem = "\\("+c+"\\) is \\("+a+"\\%\\) of what number?";
+                  answer = "\\("+b+"\\)";
+               
+               break;
+               
+               // case 2: Tax word problem - find original cost
+               case 2:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(2);          // price 
+                  d = random(4,10,rat);            // tax
+                  e = formatDec((1+d/100)*c);      // new cost
+                  e = formatDec(round(e*100)/100).toFixed(2); // round to nearest cent
+                  
+                  problem = "A "+b+" is purchased with a \\("+d+"\\%\\) tax applied and the total cost is $\\("+e+"\\) rounded to the nearest cent.";
+                  problem += "<br><br>Determine the original cost.";
+                  answer = "$\\("+c+"\\)";
+                  
+                  // accounts for multiple answers due to rounding
+                  
+                  f = formatDec(c+0.01);
+                  g = formatDec(c-0.01);    
+                  
+                  if(formatDec(round((1+d/100)*f*100)/100).toFixed(2) == e){
+                  
+                     answer += " or $\\("+f.toFixed(2)+"\\)";
+                  
+                  }
+                  
+                  if(formatDec(round((1+d/100)*g*100)/100).toFixed(2) == e){
+                  
+                     answer += " or $\\("+g.toFixed(2)+"\\)";
+                  
+                  }
+
+               break;
+               
+               // case 3: Discount word problem - find original cost
+               case 3:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(2);          // price 
+                  d = random(5,40,rat);            // discount
+                  e = formatDec((1-d/100)*c);      // new cost
+                  e = formatDec(round(e*100)/100).toFixed(2); // round to nearest cent
+                  
+                  problem = "A "+b+" is purchased with a discount of \\("+d+"\\%\\) and the discounted cost is $\\("+e+"\\) rounded to the nearest cent.";
+                  problem += "<br><br>Determine the original cost";
+                  answer = "$\\("+c+"\\)";
+                  f = formatDec(c+0.01);
+                  g = formatDec(c-0.01);    
+                  
+                  if(formatDec(round((1-d/100)*f*100)/100).toFixed(2) == e){
+                  
+                     answer += " or $\\("+f.toFixed(2)+"\\)";
+                  
+                  }
+                  
+                  if(formatDec(round((1-d/100)*g*100)/100).toFixed(2) == e){
+                  
+                     answer += " or $\\("+g.toFixed(2)+"\\)";
+                  
+                  }
+               break; 
+           }   
+           break;
+           
+           // Mixed Percents
+           case 4:
+           
+           switch(random(0,4)){
+           
+               // case 0: Simple - find x % of a number
+               case 0:
+               
+                  a = random(3,200,rat);  // percent
+                  b = random(10, 300);    // number
+                  c = formatDec(a*b/100); // answer
+                  
+                  problem = "Find \\("+a+"\\%\\) of \\("+b+"\\)";
+                  answer = "\\("+c+"\\)";
+                  type = 1; // necessary for correct video
+                  
+               break;
+               
+               // case 1: Using part/whole to find percent
+               case 1:
+               
+                  a = random(1,99,rat);   // percent
+                  b = random(10, 300);    // whole
+                  c = formatDec(a*b/100); // part
+                  
+                  problem = "If the part is \\("+c+"\\) and the whole is \\("+b+"\\), what is the percent?";
+                  answer = "\\("+a+"\\%\\)";
+                  type = 2; // necessary for correct video
+               
+               break;
+               
+               // case 2: What percent of number1 is number2?
+               case 2:
+               
+                  a = random(3,200,rat);  // percent
+                  b = random(10, 300);    // whole
+                  c = formatDec(a*b/100); // part
+                  
+                  problem = "What percent of \\("+b+"\\) is \\("+c+"\\)?";
+                  answer = "\\("+a+"\\%\\)";
+                  type = 2; // necessary for correct video
+               
+               break;
+               
+               // case 3: % of what number is part - find total
+               case 3:
+               
+                  a = random(3,200,rat);  // percent
+                  b = random(10, 300);    // number
+                  c = formatDec(a*b/100); // answer
+                  
+                  problem = "\\("+a+"\\%\\) of what number is \\("+c+"\\)?";
+                  answer = "\\("+b+"\\)";
+                  type = 3; // necessary for correct video
+               
+               break;
+               
+               // case 4: Number is % of x, what is x?
+               case 4:
+               
+                  a = random(3,200,rat); // percent
+                  b = random(10, 300);    // number
+                  c = formatDec(a*b/100); // answer
+                  
+                  problem = "\\("+c+"\\) is \\("+a+"\\%\\) of what number?";
+                  answer = "\\("+b+"\\)";
+                  type = 3; // necessary for correct video
+               
+               break;
+      
+           }
+           
+           break;
+           
+           // Percent Expressions
+           case 5:
+           var letterOptions = ["x","y","z","a","b","c","d","f","g","h","j","k","m","n","p","q","r","v","w"];
+           var letter = letterOptions[random(0,letterOptions.length-1)].toString();
+           problem = "The original price of an item is represented as \\("+letter+"\\)<br>";
+           var word = "";
+           var per = 0;
+           var total = 100;
+           var symb = "";
+
+              //tax, discount, markup, markdown, commission, tip
+              switch(random(0,3)){
+                 
+                 // tax or tip
+                 case 0:
+                 per = random(3,25,rat); // percent
+                 total = total + per;
+                 symb = "+";
+                    //tax or tip
+                    switch(random(0,1)){ case 0: word = "tax"; break; case 1: word = "tip"; break; }
+                 break;
+                 
+                 // discount
+                 case 1:
+                 per = random(5,75,rat); // percent
+                 word = "discount";
+                 total = total - per;
+                 symb = "-";
+                 break;
+                 
+                 // commission
+                 case 2:
+                 per = random(3,30,rat); // percent
+                 word = "commission";
+                 break;
+                 
+                 // markup or mark down
+                 case 3:
+                 per = random(25,90,rat); // percent
+                 
+                    //markup or mark down
+                    switch(random(0,1)){ case 0: word = "markup"; symb = "+"; total = total+per; break; case 1: word = "markdown"; symb = "-"; total = total-per; break; }
+
+                 break;
+                 
+              }
+           var perDec = formatDec(per/100); // convert to decimal
+           total = formatDec(total/100); //convert to decimal
+           var quesType = random(0,1);
+           if(word == "commission"){ quesType = 0; } // no total price for commission
+           
+           switch(quesType){
+               
+               // ask for the part
+               case 0:
+               problem += "What represents a \\("+per+"\\%\\) "+word+"?";
+               answer = "\\("+perDec+letter+"\\)";
+               break;
+               
+               // ask for the total price
+               case 1:
+               problem += "What is the final price after a "+word+" of \\("+per+"\\%\\)?";
+               answer = "\\("+letter+symb+perDec+letter+"="+total+letter+"\\)";
+               break;
+           }
+           
+           break;
+           
+           // Multi-Step Percents
+           case 6: 
+ 
+             a = wordProblemSubject();        // subject
+             b = a.name;                      // name
+             c = a.price.toFixed(2);          // price 
+             d = random(5,40,rat);            // discount
+             e = random(4,10,rat);            // tax
+             f = formatDec(((1-d/100)*c)*(1+e/100));      // final cost
+             f = formatDec(round(f*100)/100).toFixed(2); // round to nearest cent
+                  
+             problem = "A "+b+" originally costs $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied and then a \\("+e+"\\%\\) tax, what is the final price?";
+             problem += "<br><br>Only round the final answer to the nearest cent.";
+             answer = "$\\("+f+"\\)";
+          
+           break;
+           
+           // Percent Change (with word problems and variables)
+           case 7: 
+            
+           switch(random(0,3)){
+           
+               // case 0: Find the percent change between two numbers, no context (increase/decrease labels)       
+               case 0:
+                  
+                  // percent
+                  do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
+                  b = random(10, 300);    // original
+                  c = formatDec(a*b/100); // new
+                  
+                  problem = "What is the percent change from \\("+b+"\\) to \\("+c+"\\)?";
+                  
+                  // % increase
+                  if(a > 100){
+                     
+                     d = formatDec(a-100); // change
+                     answer = "\\("+d+"\\%\\) increase";
+                     
+                  }
+                  // % decrease
+                  else{
+                  
+                     d = formatDec(100-a); // change
+                     answer = "\\("+d+"\\%\\) decrease";
+                  }
+               
+               break;
+               
+               // case 1: Percent change with variables
+               case 1:
+                  
+                  // percent
+                  do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
+
+                  problem = "What is the percent change from \\(x\\) to \\("+formatDec(a/100)+"x\\)?";
+                  
+                  // % increase
+                  if(a > 100){
+                     
+                     d = formatDec(a-100); // change
+                     answer = "\\("+d+"\\%\\) increase";
+                     
+                  }
+                  // % decrease
+                  else{
+                  
+                     d = formatDec(100-a); // change
+                     answer = "\\("+d+"\\%\\) decrease";
+                  }
+               
+               break;
+               
+               // case 2: Percent change word problem tax
+               case 2:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
+                  d = random(4,15,rat);            // tax
+                  e = formatDec((1+d/100)*c).toFixed(2);      // new cost
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of tax was applied?";
+                  answer = "\\("+d+"\\%\\)";
+
+               break;
+               
+               // case 3: Percent change word problem discount
+               case 3:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
+                  d = random(5,70,rat);            // discount
+                  e = formatDec((1-d/100)*c).toFixed(2);      // new cost
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of a discount was applied?";
+                  answer = "\\("+d+"\\%\\)";
+
+               break;
+           }
+           
+           break;
+
+       }
+       
+       var videoLinks = ["https://www.youtube.com/watch?v=mJ8YqZ_IM7Y",
+                         "https://www.youtube.com/watch?v=DgHnbItNW04",
+                         "https://www.youtube.com/watch?v=OY4HIjgJoCw",
+                         "",
+                         "https://www.youtube.com/watch?v=7JNQhdTJxR4",
+                         "https://www.youtube.com/watch?v=Zqe_qnyBWiw",
+                         "https://www.youtube.com/watch?v=LbxdAeJgtgQ",
+                         ];
+       
+       if(videoLinks[type-1] != null && videoLinks[type-1].length != 0){ 
+         $("#videoLink"). attr("href", videoLinks[type-1]);
+         $('#video-button').show();
+       }
+       else{
+         $('#video-button').hide();
+       }
+       
+       $("#generated").html(problem);
+       $("#answer").html(doublesigns(answer));
+       renderMathInElement(document.body);
+       //MathJax.Hub.queue.Push(["Typeset",MathJax.Hub,"generated"]);
+       //MathJax.Hub.queue.Push(["Typeset",MathJax.Hub,"answer"]);
+	}
+    
+    // helper function to generate items with prices
+    function wordProblemSubject(){
+
+        var options = [
+                          {name:"TV",price:randomDec(400,999, 2)},
+                          {name:"game system",price:randomDec(200, 500, 2)},
+                          {name:"movie ticket",price:randomDec(9, 15, 2)},
+                          {name:"concert ticket",price:randomDec(40, 150, 2)},
+                          {name:"DVD",price:randomDec(10,25, 2)},    
+                          {name:"computer",price:randomDec(500,1500, 2)},
+                          {name:"tablet",price:randomDec(250,900, 2)},  
+                      ];
+           
+       return options[random(0,options.length-1)];
+    }
+    
+    // helper function to generate survey options
+    function surveySubject(){
+
+        var options = ["basketball","soccer","dance","video games","singing","playing an instrument","football","watching TV","cheerleading","baseball"];
+           
+       return options[random(0,options.length-1)];
+    }
+</script>
