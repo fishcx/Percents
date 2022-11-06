@@ -440,8 +440,36 @@
                
                break;
                
-               // case 1: Percent change with variables
+               // case 1: Percent change word problem tax
                case 1:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
+                  d = random(4,15,rat);            // tax
+                  e = formatDec((1+d/100)*c).toFixed(2);      // new cost
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of tax was applied?";
+                  answer = "\\("+d+"\\%\\)";
+
+               break;
+               
+               // case 2: Percent change word problem discount
+               case 2:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
+                  d = random(5,70,rat);            // discount
+                  e = formatDec((1-d/100)*c).toFixed(2);      // new cost
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of a discount was applied?";
+                  answer = "\\("+d+"\\%\\)";
+
+               break;
+
+               // case 3: Percent change with variables
+               case 3:
                   
                   // percent
                   do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
@@ -463,37 +491,17 @@
                   }
                
                break;
-               
-               // case 2: Percent change word problem tax
-               case 2:
-               
-                  a = wordProblemSubject();        // subject
-                  b = a.name;                      // name
-                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
-                  d = random(4,15,rat);            // tax
-                  e = formatDec((1+d/100)*c).toFixed(2);      // new cost
-                  
-                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of tax was applied?";
-                  answer = "\\("+d+"\\%\\)";
-
-               break;
-               
-               // case 3: Percent change word problem discount
-               case 3:
-               
-                  a = wordProblemSubject();        // subject
-                  b = a.name;                      // name
-                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
-                  d = random(5,70,rat);            // discount
-                  e = formatDec((1-d/100)*c).toFixed(2);      // new cost
-                  
-                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of a discount was applied?";
-                  answer = "\\("+d+"\\%\\)";
-
-               break;
            }
            
            break;
+
+          // Percent Error (with word problems and variables)
+          case 8: 
+          a = getPercentError(rat);
+          problem = a.prob;
+          answer = a.ans;
+           
+          break;
 
        }
        
@@ -521,6 +529,108 @@
        //MathJax.Hub.queue.Push(["Typeset",MathJax.Hub,"answer"]);
 	}
     
+    // helper function for percent Error
+    function getPercentError(rat){
+      var person = generateName(); // a.name a.pronoun
+
+      var perScale = random(5,40);            
+      var mult;     
+
+      // bigger or smaller
+      switch(random(0,1)){
+        // bigger
+        case 0: mult = (1+perScale/100); break;
+        // smaller
+        case 1: mult = (1-perScale/100); break;
+      }
+
+      var textProblem, actual, estimated, perError;
+
+      switch(random(0,5)){
+        
+        // estimating weight of a cat
+        case 0:
+        estimated = random(8,16);
+        actual = formatDec(mult*estimated);
+        textProblem = person.name+" estimates the weight of "+person.poss+" cat to be "+estimated+" pounds. The actual weight is "+actual+" pounds. Find the percent error" 
+        break;
+
+        // estimating money spent at a grocery store
+        case 1:
+        estimated = random(50,175);
+        actual = formatDec(mult*estimated);
+        textProblem = person.name+" estimates that "+person.pronoun+" will spend $"+estimated+" on groceries. "+person.name+" actually spends $"+actual.toFixed(2)+". Find the percent error" 
+        break;
+
+        // estimating people at a concert
+        case 2:
+        estimated = random(10,35)*10;
+        actual = Math.round(formatDec(mult*estimated));
+        textProblem = person.name+" estimates that there were "+estimated+" people at a concert. The actual number that attended was "+actual+" people. Find the percent error" 
+        break;
+
+        // calculating the cost of a book
+        case 3:
+        estimated = random(15,70);
+        actual = formatDec(mult*estimated);
+        textProblem = person.name+" calculates the cost of a book as $"+estimated+". The actual price was $"+actual.toFixed(2)+". Find the percent error"
+        break;
+
+        // measuring speed
+        case 4:
+        estimated = random(15,70);
+        actual = formatDec(mult*estimated);
+        textProblem = person.name+" measures a runner's time to be "+estimated+" seconds. The actual time was "+actual+" seconds. Find the percent error"
+        break;
+
+        // measuring volume
+        case 5:
+        estimated = random(10,90)*10;
+        actual = formatDec(mult*estimated);
+        textProblem = person.name+" measures volume of a liquid to be "+estimated+" mL. The actual volume was "+actual+" mL. Find the percent error"
+        break;
+
+      }
+
+      if(rat){ 
+        textProblem +=" to the nearest tenth of a percent."; 
+        perError = formatDec(Math.round(Math.abs(estimated-actual)/actual*1000)/10);
+      }
+      else{
+        textProblem += " to the nearest percent.";
+        perError = formatDec(Math.round(Math.abs(estimated-actual)/actual*100));
+      }
+
+      return {prob: textProblem, ans: "\\("+perError+"\\%\\)"};
+
+    }
+
+    // helper function for generatePropWord
+    function generateName(){
+       
+       var options = [
+                          {name:"John", pronoun:"he",poss:"his"},
+                          {name:"Jane", pronoun:"she",poss:"her"},
+                          {name:"Bill", pronoun:"he",poss:"his"},
+                          {name:"Alex", pronoun:"she",poss:"her"},
+                          {name:"Jennifer", pronoun:"she",poss:"her"},
+                          {name:"Skyler", pronoun:"she",poss:"her"},
+                          {name:"Michael", pronoun:"he",poss:"his"},
+                          {name:"Sarah", pronoun:"she",poss:"her"},
+                          {name:"Kim", pronoun:"she",poss:"her"},
+                          {name:"Jacob", pronoun:"he",poss:"his"},
+                          {name:"Jessica", pronoun:"she",poss:"her"},
+                          {name:"Antonio", pronoun:"he",poss:"his"},
+                          {name:"Anthony", pronoun:"he",poss:"his"},
+                          {name:"Rebecca", pronoun:"she",poss:"her"},
+                          {name:"Jen", pronoun:"she",poss:"her"},
+                          {name:"Jeff", pronoun:"he",poss:"his"}
+                      ];
+        
+        var chosen = options[random(0,options.length-1)];
+        return chosen;
+    }
+
     // helper function to generate items with prices
     function wordProblemSubject(){
 
