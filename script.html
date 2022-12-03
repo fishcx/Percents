@@ -28,7 +28,7 @@
         
         var type;
         // handles the formatting for selecting any type
-        if($("#type").val()=="any"){type = random(1,8);}
+        if($("#type").val()=="any"){type = random(1,7);}
         else{type = parseInt($("#type").val())}
 
         generate(type,rat);       
@@ -324,8 +324,124 @@
            
            break;
            
+           // Multi-Step Percents
+           case 5: 
+ 
+             a = wordProblemSubject();        // subject
+             b = a.name;                      // name
+             c = a.price.toFixed(2);          // price 
+             d = random(5,40,rat);            // discount
+             e = random(4,10,rat);            // tax
+             f = formatDec(((1-d/100)*c)*(1+e/100));      // final cost
+             f = formatDec(round(f*100)/100).toFixed(2); // round to nearest cent
+                  
+             problem = "A "+b+" originally costs $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied and then a \\("+e+"\\%\\) tax, what is the final price?";
+             problem += "<br><br>Only round the final answer to the nearest cent.";
+             answer = "$\\("+f+"\\)";
+          
+           break;
+           
+
+           // Percent Change Word Problems
+           case 6: 
+            
+           switch(random(0,2)){
+           
+               // case 0: Find the percent change between two numbers, no context (increase/decrease labels)       
+               case 0:
+                  
+                  // percent
+                  do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
+                  b = random(10, 300);    // original
+                  c = formatDec(a*b/100); // new
+                  
+                  problem = "What is the percent change from \\("+b+"\\) to \\("+c+"\\)?";
+                  
+                  // % increase
+                  if(a > 100){
+                     
+                     d = formatDec(a-100); // change
+                     answer = "\\("+d+"\\%\\) increase";
+                     
+                  }
+                  // % decrease
+                  else{
+                  
+                     d = formatDec(100-a); // change
+                     answer = "\\("+d+"\\%\\) decrease";
+                  }
+               
+               break;
+               
+               // case 1: Percent change word problem tax
+               case 1:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
+                  d = random(4,15,rat);            // tax
+                  e = formatDec((1+d/100)*c).toFixed(2);      // new cost
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of tax was applied?";
+                  answer = "\\("+d+"\\%\\)";
+
+               break;
+               
+               // case 2: Percent change word problem discount
+               case 2:
+               
+                  a = wordProblemSubject();        // subject
+                  b = a.name;                      // name
+                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
+                  d = random(5,70,rat);            // discount
+                  e = formatDec((1-d/100)*c).toFixed(2);      // new cost
+                  
+                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of a discount was applied?";
+                  answer = "\\("+d+"\\%\\)";
+
+               break;
+
+                /*
+               // case 3: Percent change with variables
+               case 3:
+                  
+                  // percent
+                  do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
+
+                  problem = "What is the percent change from \\(x\\) to \\("+formatDec(a/100)+"x\\)?";
+                  
+                  // % increase
+                  if(a > 100){
+                     
+                     d = formatDec(a-100); // change
+                     answer = "\\("+d+"\\%\\) increase";
+                     
+                  }
+                  // % decrease
+                  else{
+                  
+                     d = formatDec(100-a); // change
+                     answer = "\\("+d+"\\%\\) decrease";
+                  }
+               
+               break;
+               */
+           }
+           
+           break;
+
+          // Percent Error Word Problems
+          case 7: 
+          a = getPercentError(rat);
+          problem = a.prob;
+          answer = a.ans;
+           
+          break;
+
+          /**
+            * In Expressions now
            // Percent Expressions
-           case 5:
+           case 8:
            var letterOptions = ["x","y","z","a","b","c","d","f","g","h","j","k","m","n","p","q","r","v","w"];
            var letter = letterOptions[random(0,letterOptions.length-1)].toString();
            problem = "The original price of an item is represented as \\("+letter+"\\)<br>";
@@ -391,117 +507,7 @@
            }
            
            break;
-           
-           // Multi-Step Percents
-           case 6: 
- 
-             a = wordProblemSubject();        // subject
-             b = a.name;                      // name
-             c = a.price.toFixed(2);          // price 
-             d = random(5,40,rat);            // discount
-             e = random(4,10,rat);            // tax
-             f = formatDec(((1-d/100)*c)*(1+e/100));      // final cost
-             f = formatDec(round(f*100)/100).toFixed(2); // round to nearest cent
-                  
-             problem = "A "+b+" originally costs $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied and then a \\("+e+"\\%\\) tax, what is the final price?";
-             problem += "<br><br>Only round the final answer to the nearest cent.";
-             answer = "$\\("+f+"\\)";
-          
-           break;
-           
-           // Percent Change (with word problems and variables)
-           case 7: 
-            
-           switch(random(0,3)){
-           
-               // case 0: Find the percent change between two numbers, no context (increase/decrease labels)       
-               case 0:
-                  
-                  // percent
-                  do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
-                  b = random(10, 300);    // original
-                  c = formatDec(a*b/100); // new
-                  
-                  problem = "What is the percent change from \\("+b+"\\) to \\("+c+"\\)?";
-                  
-                  // % increase
-                  if(a > 100){
-                     
-                     d = formatDec(a-100); // change
-                     answer = "\\("+d+"\\%\\) increase";
-                     
-                  }
-                  // % decrease
-                  else{
-                  
-                     d = formatDec(100-a); // change
-                     answer = "\\("+d+"\\%\\) decrease";
-                  }
-               
-               break;
-               
-               // case 1: Percent change word problem tax
-               case 1:
-               
-                  a = wordProblemSubject();        // subject
-                  b = a.name;                      // name
-                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
-                  d = random(4,15,rat);            // tax
-                  e = formatDec((1+d/100)*c).toFixed(2);      // new cost
-                  
-                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of tax was applied?";
-                  answer = "\\("+d+"\\%\\)";
-
-               break;
-               
-               // case 2: Percent change word problem discount
-               case 2:
-               
-                  a = wordProblemSubject();        // subject
-                  b = a.name;                      // name
-                  c = a.price.toFixed(0);          // price - remove decimals to help with calculations
-                  d = random(5,70,rat);            // discount
-                  e = formatDec((1-d/100)*c).toFixed(2);      // new cost
-                  
-                  problem = "A "+b+" costs $\\("+c+"\\) originally. If the final price is $\\("+e+"\\), what percent of a discount was applied?";
-                  answer = "\\("+d+"\\%\\)";
-
-               break;
-
-               // case 3: Percent change with variables
-               case 3:
-                  
-                  // percent
-                  do{ a = random(3,300,rat); } while(a == 100); // don't want 100%, no change
-
-                  problem = "What is the percent change from \\(x\\) to \\("+formatDec(a/100)+"x\\)?";
-                  
-                  // % increase
-                  if(a > 100){
-                     
-                     d = formatDec(a-100); // change
-                     answer = "\\("+d+"\\%\\) increase";
-                     
-                  }
-                  // % decrease
-                  else{
-                  
-                     d = formatDec(100-a); // change
-                     answer = "\\("+d+"\\%\\) decrease";
-                  }
-               
-               break;
-           }
-           
-           break;
-
-          // Percent Error (with word problems and variables)
-          case 8: 
-          a = getPercentError(rat);
-          problem = a.prob;
-          answer = a.ans;
-           
-          break;
+           */
 
        }
        
@@ -509,7 +515,6 @@
                          "https://www.youtube.com/watch?v=DgHnbItNW04",
                          "https://www.youtube.com/watch?v=OY4HIjgJoCw",
                          "",
-                         "https://www.youtube.com/watch?v=7JNQhdTJxR4",
                          "https://www.youtube.com/watch?v=Zqe_qnyBWiw",
                          "https://www.youtube.com/watch?v=LbxdAeJgtgQ",
                          "https://www.youtube.com/watch?v=4dFGEIieIF8"
@@ -526,8 +531,6 @@
        $("#generated").html(problem);
        $("#answer").html(doublesigns(answer));
        renderMathInElement(document.body);
-       //MathJax.Hub.queue.Push(["Typeset",MathJax.Hub,"generated"]);
-       //MathJax.Hub.queue.Push(["Typeset",MathJax.Hub,"answer"]);
 	}
     
     // helper function for percent Error
