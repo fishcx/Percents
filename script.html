@@ -101,7 +101,7 @@
                   e = formatDec((1-d/100)*c);      // new cost
                   e = formatDec(round(e*100)/100).toFixed(2); // round to nearest cent
                   
-                  problem = "A "+b+" originally costs $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied, what is the new price?";
+                  problem = "A "+b+" originally cost $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied, what is the new price?";
                   problem += "<br><br>Round to the nearest cent.";
                   answer = "$\\("+e+"\\)";
 
@@ -335,7 +335,7 @@
              f = formatDec(((1-d/100)*c)*(1+e/100));      // final cost
              f = formatDec(round(f*100)/100).toFixed(2); // round to nearest cent
                   
-             problem = "A "+b+" originally costs $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied and then a \\("+e+"\\%\\) tax, what is the final price?";
+             problem = "A "+b+" originally cost $\\("+c+"\\). If a \\("+d+"\\%\\) discount is applied and then a \\("+e+"\\%\\) tax, what is the final price?";
              problem += "<br><br>Only round the final answer to the nearest cent.";
              answer = "$\\("+f+"\\)";
           
