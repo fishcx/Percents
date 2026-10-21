@@ -28,7 +28,7 @@
         
         var type;
         // handles the formatting for selecting any type
-        if($("#type").val()=="any"){type = random(1,7);}
+        if($("#type").val()=="any"){type = random(1,8);}
         else{type = parseInt($("#type").val())}
 
         generate(type,rat);       
@@ -438,86 +438,21 @@
            
           break;
 
-          /**
-            * In Expressions now
-           // Percent Expressions
-           case 8:
-           var letterOptions = ["x","y","z","a","b","c","d","f","g","h","j","k","m","n","p","q","r","v","w"];
-           var letter = letterOptions[random(0,letterOptions.length-1)].toString();
-           problem = "The original price of an item is represented as \\("+letter+"\\)<br>";
-           var word = "";
-           var per = 0;
-           var total = 100;
-           var symb = "";
-
-              //tax, discount, markup, markdown, commission, tip
-              switch(random(0,3)){
-                 
-                 // tax or tip
-                 case 0:
-                 per = random(3,25,rat); // percent
-                 total = total + per;
-                 symb = "+";
-                    //tax or tip
-                    switch(random(0,1)){ case 0: word = "tax"; break; case 1: word = "tip"; break; }
-                 break;
-                 
-                 // discount
-                 case 1:
-                 per = random(5,75,rat); // percent
-                 word = "discount";
-                 total = total - per;
-                 symb = "-";
-                 break;
-                 
-                 // commission
-                 case 2:
-                 per = random(3,30,rat); // percent
-                 word = "commission";
-                 break;
-                 
-                 // markup or mark down
-                 case 3:
-                 per = random(25,90,rat); // percent
-                 
-                    //markup or mark down
-                    switch(random(0,1)){ case 0: word = "markup"; symb = "+"; total = total+per; break; case 1: word = "markdown"; symb = "-"; total = total-per; break; }
-
-                 break;
-                 
-              }
-           var perDec = formatDec(per/100); // convert to decimal
-           total = formatDec(total/100); //convert to decimal
-           var quesType = random(0,1);
-           if(word == "commission"){ quesType = 0; } // no total price for commission
-           
-           switch(quesType){
-               
-               // ask for the part
-               case 0:
-               problem += "What represents a \\("+per+"\\%\\) "+word+"?";
-               answer = "\\("+perDec+letter+"\\)";
-               break;
-               
-               // ask for the total price
-               case 1:
-               problem += "What is the final price after a "+word+" of \\("+per+"\\%\\)?";
-               answer = "\\("+letter+symb+perDec+letter+"="+total+letter+"\\)";
-               break;
-           }
-           
-           break;
-           */
-
+          // Simple Interest
+          case 8:
+          a = getSimpleInterest(rat);
+          problem = a.prob;
+          answer = a.ans;
+          break;
        }
-       
        var videoLinks = ["https://www.youtube.com/watch?v=mJ8YqZ_IM7Y",
                          "https://www.youtube.com/watch?v=DgHnbItNW04",
                          "https://www.youtube.com/watch?v=OY4HIjgJoCw",
                          "",
                          "https://www.youtube.com/watch?v=Zqe_qnyBWiw",
                          "https://www.youtube.com/watch?v=LbxdAeJgtgQ",
-                         "https://www.youtube.com/watch?v=4dFGEIieIF8"
+                         "https://www.youtube.com/watch?v=4dFGEIieIF8",
+                         ""
                          ];
        
        if(videoLinks[type-1] != null && videoLinks[type-1].length != 0){ 
@@ -533,6 +468,37 @@
        renderMathInElement(document.body);
 	}
     
+    // helper function for simple interest
+    function getSimpleInterest(rat){
+      var person = generateName(); // a.name a.pronoun
+
+      var interestRate = random(2,10,rat); // percent 
+      var principle = random(2,90)*100;
+      var years = random(2,10);
+      var interestEarned = formatDec(principle*interestRate/100*years);
+      var finalBalance = principle+interestEarned;
+      var textProblem, answer;
+
+      switch(random(0,4)){
+        
+        // finding simple interest and total
+        case 0: case 1: case 2: case 3:
+        textProblem = `${person.name} invests $${principle} for ${years} years with a simple interest rate of ${interestRate}%. Determine the total interest earned and the final balance.`;
+        answer = `Interest earned: $${interestEarned.toFixed(2)}, Final Balance: $${finalBalance.toFixed(2)}`;
+        break;
+
+        // determine the interest rate
+        case 4:
+        textProblem = `${person.name} invests $${principle} for ${years} years and earns $${interestEarned.toFixed(2)} in simple interest. Determine the annual interest rate.`;
+        answer = `Interest rate of ${interestRate}%`;
+        break;
+
+      }
+
+      return {prob: textProblem, ans: answer};
+
+    }
+
     // helper function for percent Error
     function getPercentError(rat){
       var person = generateName(); // a.name a.pronoun
