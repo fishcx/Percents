@@ -114,7 +114,7 @@
            // Determining Percents (with word problems)
            case 2: 
                  
-           switch(random(0,2)){
+           switch(random(0,3)){
            
                // case 0: Using part/whole to find percent
                case 0:
@@ -124,7 +124,7 @@
                   c = formatDec(a*b/100); // part
                   
                   problem = `If the part is ${c} and the whole is ${b}, what is the percent?`;
-                  answer = `${a}%`;
+                  answer = `\\(${a}\\%\\)`;
                
                break;
                
@@ -136,7 +136,7 @@
                   c = formatDec(a*b/100); // part
                   
                   problem = `What percent of ${b} is ${c}?`;
-                  answer = `${a}%`;
+                  answer = `\\(${a}\\%\\)`;
                
                break;
                
@@ -144,13 +144,20 @@
                case 2:
                   
                   a = surveySubject();                 // selected
-                  b = formatDec(random(10,4000)*100);  // total, want a multiple of 100 to avoid decimals since % has no decimal places
+                  b = formatDec(random(10,40)*1000);  // total, want a multiple of 100 to avoid decimals since % has no decimal places
                   c = random(2, 85,rat);               // percent
                   d = formatDec(c/100*b);              // num selected
                   
                   problem = `In a survey of ${b} middle school students, ${d} chose ${a} as their favorite hobby.  What percent of those surveyed chose ${a}?`;
-                  answer = `${c}%`;
+                  answer = `\\(${c}\\%\\)`;
                
+               break;
+
+               // case 3: Word Problem with two parts, need to find the whole first
+               case 3:
+                var opt = generatePercentWordProb(rat); // helper function
+                problem = opt.p;
+                answer = opt.a;
                break;
            
            }
@@ -468,6 +475,61 @@
        renderMathInElement(document.body);
 	}
     
+      function generatePercentWordProb(rat){
+
+      var people, problem, answer, options, value1, value2, sf, v1, v2, per1, per2, wper1;
+      /*
+      switch(random(0,3)){
+
+        case 0: people = "7th graders"; break;
+        case 1: people = "students at Merton Williams Middle School"; break;
+        case 2: people = "Hilton residents"; break;
+        case 3: people = "8th graders"; break;
+
+      } */
+      // keep it simple to shorten the wording
+      people = "students";
+
+      switch(random(0,3)){
+
+        case 0: options = ["McDonald's", "Chick-fil-A"]; break;
+        case 1: options = ["pizza", "subs"]; break;
+        case 2: options = ["an amusement park", "a science museum"]; break;
+        case 3: options = ["ice cream", "cookies"]; break;
+
+      }
+
+      sf = random(1,5)*10;
+      v1 = randomDec(1,9,1);
+      if(rat){v2 =randomDec(1,9,1); }
+      else {v2 = 10-v1;}
+      value1 = formatDec(sf*v1);
+      value2 = formatDec(sf*v2);
+
+      per1 = formatDec(round(v1/(v1+v2)*100000)/1000);
+      per2 = formatDec(round(v2/(v1+v2)*100000)/1000);
+      wper1 = formatDec(round(v1/(v2)*100000)/1000);
+
+      problem = `A survey of ${people} found ${value1} preferred ${options[0]} and ${value2} preferred ${options[1]}. `;
+
+      switch(random(0,1)){
+
+          case 0:
+          problem += `Find the percent of all ${people} surveyed who selected ${options[0]}.`;
+          answer = `\\(${per1}\\%\\)`;
+          break;
+
+          case 1:
+          problem += `Find the percent of all ${people} surveyed who selected ${options[1]}.`;
+          answer = `\\(${per2}\\%\\)`;
+          break;
+
+      }
+
+    return {p: problem, a: answer}
+
+    }
+
     // helper function for simple interest
     function getSimpleInterest(rat){
       var person = generateName(); // a.name a.pronoun
